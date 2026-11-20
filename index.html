@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf8f3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Révisions LFO">
+<title>LFO - Gilles Daram - Révisions partie 1 (trimestre 1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6fb; --card:#fff; --ink:#1b2333; --muted:#5b6578; --line:#e3e7f0;
+  --blue:#2563eb; --blue-soft:#e8efff; --orange:#ea6a0c; --orange-soft:#fff1e6;
+  --green:#15935b; --green-soft:#e5f6ee; --red:#d23b3b; --red-soft:#fdeaea;
+  --radius:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.5}
+button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
+#app{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 96px)}
+header.top{display:flex;align-items:center;gap:10px;margin:6px 0 16px}
+header.top h1{font-size:1.35rem;margin:0;font-weight:800;letter-spacing:-.01em}
+header.top .sub{color:var(--muted);font-size:.85rem;margin:0}
+.back{display:inline-flex;align-items:center;gap:4px;color:var(--blue);font-weight:700;padding:6px 0;margin-bottom:4px}
+.card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:0 1px 2px rgba(20,30,60,.06),0 4px 14px rgba(20,30,60,.05);margin-bottom:12px}
+.progress-card{background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff}
+.progress-card .big{font-size:1.6rem;font-weight:800}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.3);overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .4s}
+.section-title{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin:20px 4px 8px}
+.fiche-item{display:flex;gap:12px;align-items:center;width:100%;text-align:left}
+.fiche-item .ico{font-size:1.6rem;width:48px;height:48px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center;flex:none}
+.fiche-item .t{font-weight:800;line-height:1.25}
+.fiche-item .m{font-size:.82rem;color:var(--muted)}
+.badge{display:inline-block;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--blue-soft);color:var(--blue);margin-right:6px}
+.badge.ok{background:var(--green-soft);color:var(--green)}
+.badge.ac{background:#f1effc;color:#5b44c4}
+.chev{margin-left:auto;color:#a3abbd;font-size:1.3rem}
+.note{font-size:.8rem;color:var(--muted);text-align:center;margin:18px 8px}
+/* Fiche */
+.fiche h2{font-size:1.3rem;margin:4px 0 4px;line-height:1.25}
+.fiche h3{font-size:1.05rem;margin:0 0 6px;color:var(--blue)}
+.fiche p{margin:0 0 8px}
+.fiche ul{margin:0 0 8px;padding-left:20px}
+.fiche li{margin-bottom:4px}
+.retenir{background:var(--orange-soft);border-left:5px solid var(--orange)}
+.retenir h3{color:var(--orange)}
+.kw{font-weight:800;color:var(--blue)}
+.def{border-top:1px solid var(--line);padding:10px 0}
+.def:first-of-type{border-top:none}
+.def b{display:block}
+.ipbig{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:1.5rem;font-weight:800;text-align:center;margin:8px 0 2px;letter-spacing:.02em}
+.ipmask{font-family:ui-monospace,Menlo,Consolas,monospace;text-align:center;color:var(--muted);font-weight:700}
+.net{color:var(--blue)} .host{color:var(--orange)}
+.legend{display:flex;justify-content:center;gap:14px;font-size:.82rem;margin-top:6px;flex-wrap:wrap}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+table.rt{width:100%;border-collapse:collapse;font-size:.88rem;margin:6px 0}
+table.rt th,table.rt td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+table.rt th{background:var(--blue-soft)}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;justify-content:center;margin:8px 0}
+.flow span{background:var(--blue-soft);color:var(--blue);font-weight:700;border-radius:10px;padding:6px 10px;font-size:.85rem}
+.flow em{font-style:normal;color:#9aa3b5}
+svg.schema{width:100%;height:auto;display:block}
+.btn{display:block;width:100%;padding:14px;border-radius:14px;font-weight:800;text-align:center;background:var(--blue);color:#fff;margin-top:10px}
+.btn.sec{background:var(--blue-soft);color:var(--blue)}
+.btn.ok{background:var(--green)}
+.btn.ghost{background:transparent;color:var(--muted)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+/* Flashcards */
+.flash-wrap{perspective:1200px;margin:8px 0}
+.flash{position:relative;height:300px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:20px;padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;box-shadow:0 6px 24px rgba(20,30,60,.10)}
+.face.front{background:#fff}
+.face.back{background:var(--blue);color:#fff;transform:rotateY(180deg)}
+.face .lab{position:absolute;top:14px;left:16px;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.6}
+.face .txt{font-size:1.2rem;font-weight:700;line-height:1.4}
+.face .hint{position:absolute;bottom:14px;font-size:.78rem;opacity:.55}
+.counter{text-align:center;color:var(--muted);font-weight:700;font-size:.9rem}
+/* Quiz */
+.q{font-size:1.1rem;font-weight:800;margin:4px 0 12px;line-height:1.35}
+.opt{display:block;width:100%;text-align:left;padding:13px 14px;border-radius:12px;border:2px solid var(--line);background:#fff;margin-bottom:8px;font-weight:600}
+.opt.good{border-color:var(--green);background:var(--green-soft)}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.opt:disabled{cursor:default;color:var(--ink)}
+.expl{border-radius:12px;padding:12px 14px;margin-top:4px;font-size:.92rem}
+.expl.g{background:var(--green-soft)} .expl.b{background:var(--red-soft)}
+.qbar{height:6px;border-radius:99px;background:var(--line);overflow:hidden;margin:6px 0 14px}
+.qbar>i{display:block;height:100%;background:var(--blue);transition:width .3s}
+.score{text-align:center;font-size:3rem;font-weight:800;color:var(--blue);margin:10px 0 0}
+/* Nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;justify-content:center;padding:6px 8px calc(env(safe-area-inset-bottom) + 6px);z-index:10}
+nav.tabs .in{display:flex;max-width:640px;width:100%}
+nav.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.75rem;font-weight:700;color:#8a93a6;padding:6px 0}
+nav.tabs button .i{font-size:1.35rem;line-height:1}
+nav.tabs button.on{color:var(--blue)}
+
+/* ===== Charte « pastels vifs » ===== */
+:root{--bg:#fbf8f3;--ink:#1d2135;--muted:#5d6275;--line:#ece6dc;--acc:#3eb3a6;--soft:#dcf3f0;--deep:#1d7c71}
+html,body{background:#fbf8f3;color:#1d2135}
+h1,h2,h3,.big,.score,.q,.fiche-item .t{font-family:"Baloo 2",Nunito,sans-serif}
+header.top{flex-direction:column;align-items:flex-start;gap:2px;margin-bottom:18px}
+.logo{display:grid;grid-template-columns:repeat(3,9px);gap:4px;margin-bottom:6px}
+.logo i{width:9px;height:9px;border-radius:50%;display:block}
+header.top h1{font-size:2.7rem;line-height:1;font-weight:700;color:#1d2135;letter-spacing:.01em}
+.rainbow{height:6px;width:70%;max-width:330px;border-radius:99px;background:linear-gradient(90deg,#f4a08a,#f6c56b,#a9d98a,#7fcfc4,#8fb4ee,#b59ce8,#ee9ccb);margin:10px 0 8px}
+header.top .sub{color:#1d2135;font-weight:700;font-size:.95rem;margin:0}
+header.top .sub2{color:var(--muted);font-size:.85rem;margin:0}
+.back{color:var(--deep)}
+.section-title{color:#3a3f55;letter-spacing:.12em}
+.note,.counter{color:var(--muted)}
+.card{background:#fff;border:1px solid var(--line);box-shadow:none;border-radius:18px}
+.progress-card{background:#fff;color:#1d2135}
+.progress-card .bar{background:#f0ebe2}
+.progress-card .bar>i{background:linear-gradient(90deg,#f4a08a,#f6c56b,#a9d98a,#7fcfc4,#8fb4ee,#b59ce8,#ee9ccb)}
+.fiche-item{background:var(--acc);border:none;color:#fff}
+.fiche-item .ico{background:rgba(255,255,255,.28)}
+.fiche-item .t{color:#fff;font-size:1.15rem;font-weight:600}
+.fiche-item .m{color:rgba(255,255,255,.93)}
+.chev{color:#fff}
+.fiche-item.rb .t,.fiche-item.rb .m,.fiche-item.rb .chev{color:#1d2135}
+.badge{background:var(--soft);color:var(--deep)}
+.fiche-item .badge{background:#fff}
+.badge.ok{background:#e5f6ee;color:#15935b}
+.fiche h3,.kw{color:var(--deep)}
+.fiche .card:first-child{background:var(--acc);color:#fff;border:none}
+.fiche .card:first-child .badge{background:#fff}
+.retenir{background:var(--soft);border:none;border-left:6px solid var(--acc)}
+.retenir h3{color:var(--deep)}
+.btn{background:var(--acc);color:#fff}
+.btn.sec{background:var(--soft);color:var(--deep)}
+.btn.ok{background:#1d2135}
+.btn.ghost{background:transparent;color:var(--muted)}
+.face.front{background:var(--soft);color:#1d2135}
+.face.back{background:var(--acc);color:#fff}
+.qbar{background:#ece6dc}
+.qbar>i{background:var(--acc)}
+.score{color:var(--deep)}
+nav.tabs{background:rgba(251,248,243,.96);border-top:1px solid var(--line)}
+nav.tabs button{color:#8a8ea0;border-radius:99px}
+nav.tabs button.on{color:#fff;background:#1d2135}
+.fiche h2,.big,.score,.q{font-weight:700}
+.fiche h3{font-weight:600}
+/* Convertisseur binaire */
+.conv .grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;text-align:center}
+.conv .w{font-size:.72rem;color:var(--muted);font-weight:800}
+.conv .bit{padding:10px 0;border-radius:10px;background:#f3efe8;font-weight:800;font-size:1.25rem;font-family:ui-monospace,Menlo,monospace}
+.conv .bit.on{background:var(--acc);color:#fff}
+.conv .dec{text-align:center;font-size:1.8rem;font-weight:700;color:var(--deep);font-family:"Baloo 2",Nunito,sans-serif;margin-top:8px}
+.conv .sum{text-align:center;font-size:.88rem;color:var(--muted);min-height:1.3em}
+.conv input[type=range]{width:100%;accent-color:var(--acc);margin-top:8px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="tabs"><div class="in">
+  <button data-tab="home"><span class="i">📚</span>Fiches</button>
+  <button data-tab="flash"><span class="i">🃏</span>Flashcards</button>
+  <button data-tab="quiz"><span class="i">✅</span>Quiz</button>
+</div></nav>
+
+<script>
+/* ===================== CONTENU ===================== */
+const SCHEMA_RESEAU = `
+<svg class="schema" viewBox="0 0 340 240" role="img" aria-label="Schéma du réseau d'un collège">
+ <defs><style>.b{fill:#e8efff;stroke:#2563eb;stroke-width:1.5}.t{font:700 11px Nunito,sans-serif;fill:#1b2333;text-anchor:middle}.w{stroke:#5b6578;stroke-width:2}.d{stroke:#ea6a0c;stroke-width:2;stroke-dasharray:4 4}.c{fill:#fff1e6;stroke:#ea6a0c;stroke-width:1.5}</style></defs>
+ <ellipse class="c" cx="170" cy="28" rx="62" ry="20"/><text class="t" x="170" y="32">Internet 🌍</text>
+ <line class="w" x1="170" y1="48" x2="170" y2="70"/>
+ <rect class="b" x="115" y="70" width="110" height="28" rx="7"/><text class="t" x="170" y="88">Routeur (box)</text>
+ <line class="w" x1="170" y1="98" x2="170" y2="120"/>
+ <rect class="b" x="120" y="120" width="100" height="28" rx="7"/><text class="t" x="170" y="138">Commutateur</text>
+ <rect class="b" x="8" y="120" width="82" height="28" rx="7"/><text class="t" x="49" y="138">Serveur</text>
+ <line class="w" x1="90" y1="134" x2="120" y2="134"/>
+ <rect class="b" x="250" y="120" width="82" height="28" rx="7"/><text class="t" x="291" y="138">Borne Wi-Fi</text>
+ <line class="w" x1="220" y1="134" x2="250" y2="134"/>
+ <line class="w" x1="145" y1="148" x2="50" y2="185"/>
+ <line class="w" x1="165" y1="148" x2="135" y2="185"/>
+ <line class="w" x1="185" y1="148" x2="220" y2="185"/>
+ <rect class="b" x="15" y="185" width="70" height="26" rx="7"/><text class="t" x="50" y="202">Ordinateur</text>
+ <rect class="b" x="100" y="185" width="70" height="26" rx="7"/><text class="t" x="135" y="202">Ordinateur</text>
+ <rect class="b" x="185" y="185" width="70" height="26" rx="7"/><text class="t" x="220" y="202">Imprimante</text>
+ <line class="d" x1="295" y1="148" x2="300" y2="185"/>
+ <rect class="b" x="265" y="185" width="70" height="26" rx="7"/><text class="t" x="300" y="202">Tablette</text>
+ <line class="w" x1="70" y1="230" x2="95" y2="230"/><text class="t" x="125" y="234">filaire</text>
+ <line class="d" x1="180" y1="230" x2="205" y2="230"/><text class="t" x="240" y="234">sans fil</text>
+</svg>`;
+
+const FICHES = [
+{
+ id:"sfc1n", acc:"#ef8a72", soft:"#fde7e0", deep:"#b9523b", chap:"Réseaux informatiques", code:"SFC1n", ico:"🌍",
+ titre:"Réseau local et réseau mondial (Internet)",
+ resume:"LAN, Internet, FAI, Internet ≠ Web",
+ sections:[
+  {h:"Qu'est-ce qu'un réseau informatique ?", html:`<p>Un <span class="kw">réseau informatique</span> est un ensemble d'appareils reliés entre eux pour <b>échanger des données</b>, <b>partager des ressources</b> (fichiers, imprimante, connexion Internet) et <b>communiquer</b>.</p>`},
+  {h:"Le réseau local (LAN)", html:`<p>Un <span class="kw">réseau local</span> relie des appareils situés dans un <b>même lieu</b> : la maison, le collège, une entreprise.</p>
+   <ul><li>Au collège : ordinateurs, imprimantes, serveur et bornes Wi-Fi forment le réseau pédagogique. On s'y connecte avec un <b>identifiant</b> et un <b>mot de passe</b>.</li>
+   <li>À la maison : c'est la <b>box</b> qui crée le réseau local (Wi-Fi et prises Ethernet).</li></ul>`},
+  {h:"Internet, le « réseau des réseaux »", html:`<p><span class="kw">Internet</span> est un réseau <b>mondial</b> qui relie entre eux des millions de réseaux locaux et des milliards d'appareils.</p>
+   <ul><li>Les données voyagent par des câbles (dont des <b>câbles sous-marins en fibre optique</b> entre les continents), des antennes et des satellites.</li>
+   <li>Pour y accéder, on passe par un <span class="kw">FAI</span> (Fournisseur d'Accès à Internet), qui relie la box à Internet.</li></ul>`},
+  {h:"Internet et le Web, ce n'est pas pareil", html:`<p>Le <span class="kw">Web</span> (les sites et les pages reliés par des liens) n'est qu'<b>un des services</b> d'Internet. Il en existe d'autres : messagerie, visioconférence, jeux en ligne, streaming…</p>`},
+  {h:"À quoi servent les réseaux ?", html:`<ul><li><b>Communiquer</b> : messagerie, appels vidéo</li><li><b>Partager</b> : fichiers, musique, vidéos</li><li><b>Apprendre</b> : recherches, ENT, cours à distance</li><li><b>Se divertir</b> : jeux en ligne, films, séries</li></ul>`}
+ ],
+ retenir:[
+  "Un réseau local (LAN) relie les appareils d'un même lieu (maison, collège).",
+  "Internet est le réseau mondial qui relie entre eux les réseaux locaux.",
+  "On accède à Internet grâce à un FAI, via la box.",
+  "Le Web est un service d'Internet, pas Internet lui-même."
+ ],
+ cartes:[
+  {q:"Qu'est-ce qu'un réseau informatique ?", r:"Un ensemble d'appareils reliés entre eux pour échanger des données, partager des ressources et communiquer."},
+  {q:"Qu'est-ce qu'un réseau local (LAN) ?", r:"Un réseau qui relie les appareils d'un même lieu : maison, collège, entreprise."},
+  {q:"Qu'est-ce qu'Internet ?", r:"Le réseau mondial qui relie entre eux des millions de réseaux locaux."},
+  {q:"Pourquoi appelle-t-on Internet « le réseau des réseaux » ?", r:"Parce qu'il interconnecte les réseaux du monde entier."},
+  {q:"Que signifie FAI ?", r:"Fournisseur d'Accès à Internet : l'entreprise qui relie ta box à Internet."},
+  {q:"Internet et le Web, c'est la même chose ?", r:"Non ! Le Web (sites et pages) est un des services d'Internet, comme la messagerie ou la visio."},
+  {q:"Quel appareil relie le réseau de la maison à Internet ?", r:"La box (un modem-routeur)."},
+  {q:"Comment les données traversent-elles les océans ?", r:"Principalement par des câbles sous-marins en fibre optique."}
+ ],
+ quiz:[
+  {q:"Un réseau local, c'est…", c:["Un réseau limité à un même lieu (maison, collège)","Le réseau mondial","Un site web","Un câble sous-marin"], ok:0, e:"Le réseau local (LAN) relie les appareils d'un même lieu."},
+  {q:"Internet est…", c:["Un réseau mondial qui relie des millions de réseaux","Un logiciel pour naviguer","Le réseau du collège","Une box"], ok:0, e:"Internet est le « réseau des réseaux » à l'échelle de la planète."},
+  {q:"Qui relie ta box à Internet ?", c:["Le FAI (Fournisseur d'Accès à Internet)","Le commutateur","L'imprimante","Le navigateur"], ok:0, e:"Le FAI fournit l'accès à Internet et une adresse IP publique à la box."},
+  {q:"Le Web est…", c:["Un des services d'Internet","Un autre nom d'Internet","Un câble réseau","Un réseau local"], ok:0, e:"Le Web (sites et pages) fonctionne grâce à Internet, comme la messagerie ou la visio."},
+  {q:"Lequel de ces services N'est PAS le Web ?", c:["La messagerie électronique","Un site d'actualités","Une page Wikipédia","Le site du collège"], ok:0, e:"La messagerie est un service d'Internet distinct du Web."},
+  {q:"Entre les continents, les données passent surtout par…", c:["Des câbles sous-marins en fibre optique","Le Bluetooth","Des clés USB","Le Wi-Fi"], ok:0, e:"La grande majorité du trafic intercontinental passe par la fibre optique sous-marine."}
+ ]
+},
+{
+ id:"sfc1o", acc:"#3eb3a6", soft:"#dcf3f0", deep:"#1d7c71", chap:"Réseaux informatiques", code:"SFC1o", ico:"🖧",
+ titre:"Les composants d'un réseau",
+ resume:"Terminal, carte réseau, liaisons, commutateur, routeur, serveur",
+ sections:[
+  {h:"Schéma du réseau d'un collège", html:SCHEMA_RESEAU},
+  {h:"Le rôle de chaque composant", html:`
+   <div class="def"><b>💻 Terminal</b>Appareil de l'utilisateur, au bout du réseau : ordinateur, tablette, smartphone, imprimante, objet connecté. Il envoie et reçoit des données.</div>
+   <div class="def"><b>🔌 Carte réseau</b>Composant qui permet à un appareil de se connecter au réseau (prise RJ45 ou antenne Wi-Fi). Chaque carte possède une adresse physique unique : l'<span class="kw">adresse MAC</span>.</div>
+   <div class="def"><b>🔀 Commutateur (switch)</b>Boîtier à plusieurs prises qui relie les appareils d'un <b>même réseau local</b>. Il envoie les données <b>uniquement</b> vers l'appareil destinataire.</div>
+   <div class="def"><b>🧭 Routeur</b>Relie des <b>réseaux différents</b> entre eux (par exemple le réseau du collège et Internet) et choisit le chemin des données.</div>
+   <div class="def"><b>🗄️ Serveur</b>Ordinateur, souvent allumé en permanence, qui <b>rend des services</b> aux autres appareils (les <i>clients</i>) : stocker les fichiers des élèves, gérer les comptes, héberger un site, gérer les impressions.</div>
+   <div class="def"><b>📶 Borne Wi-Fi (point d'accès)</b>Permet aux appareils sans fil de rejoindre le réseau.</div>`},
+  {h:"Les liaisons", html:`<ul>
+   <li><b>Filaires</b> : câble Ethernet (paires torsadées, prise RJ45), fibre optique (lumière, très haut débit, longues distances). Stables et rapides.</li>
+   <li><b>Non filaires</b> (ondes radio) : Wi-Fi, Bluetooth, 4G/5G. Pratiques pour se déplacer, mais portée limitée et sensibles aux obstacles.</li></ul>`},
+  {h:"Astuce mémo", html:`<p>🔀 <b>Commutateur</b> = <b>à l'intérieur</b> d'un réseau.<br>🧭 <b>Routeur</b> = <b>entre</b> les réseaux.<br>📦 La <b>box</b> regroupe modem + routeur + commutateur + borne Wi-Fi.</p>`}
+ ],
+ retenir:[
+  "Le terminal est l'appareil de l'utilisateur ; la carte réseau lui permet de se connecter.",
+  "Le commutateur relie les appareils d'un même réseau local.",
+  "Le routeur relie des réseaux différents et oriente les données.",
+  "Le serveur fournit des services aux autres appareils (clients).",
+  "Les liaisons sont filaires (câble, fibre) ou non filaires (Wi-Fi, Bluetooth, 4G/5G)."
+ ],
+ cartes:[
+  {q:"Qu'est-ce qu'un terminal ?", r:"L'appareil de l'utilisateur au bout du réseau : ordinateur, tablette, smartphone, imprimante…"},
+  {q:"À quoi sert la carte réseau ?", r:"À connecter un appareil au réseau. Elle possède une adresse MAC unique."},
+  {q:"Rôle du commutateur (switch) ?", r:"Relier les appareils d'un même réseau local et envoyer les données au bon destinataire."},
+  {q:"Rôle du routeur ?", r:"Relier des réseaux différents (ex. : collège ↔ Internet) et choisir le chemin des données."},
+  {q:"Rôle du serveur ?", r:"Fournir des services aux autres appareils : fichiers, comptes, site web, impressions…"},
+  {q:"Qu'est-ce qu'un client ?", r:"Un appareil qui demande un service à un serveur."},
+  {q:"Deux exemples de liaisons filaires ?", r:"Câble Ethernet (prise RJ45) et fibre optique."},
+  {q:"Trois exemples de liaisons non filaires ?", r:"Wi-Fi, Bluetooth, 4G/5G."},
+  {q:"Que regroupe une box Internet ?", r:"Un modem, un routeur, un commutateur et une borne Wi-Fi."}
+ ],
+ quiz:[
+  {q:"Quel composant relie les ordinateurs d'une même salle entre eux ?", c:["Le commutateur (switch)","Le routeur","Le FAI","Le serveur DNS"], ok:0, e:"Le commutateur relie les appareils d'un même réseau local."},
+  {q:"Quel composant relie le réseau du collège à Internet ?", c:["Le routeur","Le commutateur","L'imprimante","La carte réseau"], ok:0, e:"Le routeur relie des réseaux différents entre eux."},
+  {q:"Un serveur, c'est…", c:["Un ordinateur qui fournit des services aux autres","Un câble réseau","Un écran","Un logiciel de dessin"], ok:0, e:"Le serveur rend des services (fichiers, comptes, site web…) aux clients."},
+  {q:"Laquelle est une liaison NON filaire ?", c:["Le Wi-Fi","La fibre optique","Le câble Ethernet RJ45","Le câble USB"], ok:0, e:"Le Wi-Fi utilise des ondes radio, sans câble."},
+  {q:"Quel composant possède une adresse MAC unique ?", c:["La carte réseau","Le câble","La prise électrique","Le logiciel"], ok:0, e:"L'adresse MAC est l'adresse physique gravée dans la carte réseau."},
+  {q:"Lequel est un terminal ?", c:["Une tablette","Un commutateur","Un routeur","Une fibre optique"], ok:0, e:"Le terminal est l'appareil utilisé par l'utilisateur."},
+  {q:"Avantage d'une liaison filaire par rapport au Wi-Fi ?", c:["Plus stable et plus rapide","On peut se déplacer partout","Pas besoin de carte réseau","Elle ne transporte pas de données"], ok:0, e:"Le câble est moins sensible aux obstacles et aux perturbations."}
+ ]
+},
+{
+ id:"sfc1p-a", acc:"#9079de", soft:"#ece6fb", deep:"#5f45bf", chap:"Réseaux informatiques", code:"SFC1p", ico:"🔢",
+ titre:"L'adresse IP : rôle et structure",
+ resume:"4 nombres de 0 à 255, masque, partie réseau / machine",
+ sections:[
+  {h:"À quoi sert une adresse IP ?", html:`<p>Chaque appareil connecté possède une <span class="kw">adresse IP</span> (Internet Protocol) qui l'<b>identifie de façon unique</b> sur le réseau, comme une adresse postale. Les données circulent d'une <b>IP source</b> (expéditeur) vers une <b>IP destination</b> (destinataire).</p>`},
+  {h:"Sa structure (IPv4)", html:`<p><b>4 nombres de 0 à 255</b>, séparés par des points. Chaque nombre est codé sur 8 bits (un octet) : 4 × 8 = <b>32 bits</b>.</p>
+   <div class="ipbig"><span class="net">192.168.1</span>.<span class="host">25</span></div>
+   <div class="ipmask">masque : 255.255.255.0</div>
+   <div class="legend"><span><i class="dot" style="background:var(--blue)"></i>partie réseau</span><span><i class="dot" style="background:var(--orange)"></i>partie machine</span></div>
+   <p style="margin-top:10px">❌ <b>192.168.1.300</b> n'est pas valide (300 &gt; 255). ❌ <b>10.0.5</b> non plus (seulement 3 nombres).</p>`},
+  {h:"Le masque de sous-réseau", html:`<p>Le <span class="kw">masque</span> indique quelle partie de l'adresse désigne le <b>réseau</b> et quelle partie désigne la <b>machine</b>.</p>
+   <ul><li>Avec <b>255.255.255.0</b> : les 3 premiers nombres = réseau, le dernier = machine.</li>
+   <li>Deux appareils communiquent directement s'ils ont la <b>même partie réseau</b> : 192.168.1.12 et 192.168.1.40 ✅ ; 192.168.1.12 et 192.168.2.12 ❌.</li>
+   <li>Dans le réseau 192.168.1.x, les adresses <b>.0</b> (adresse du réseau) et <b>.255</b> (diffusion) sont réservées : il reste <b>254</b> adresses pour les machines.</li>
+   <li>Deux appareils d'un même réseau ne peuvent pas avoir la même IP : c'est un <b>conflit d'adresse</b>.</li></ul>`},
+  {h:"Commandes utiles", html:`<ul><li><b>ipconfig</b> (Windows) : affiche l'adresse IP de l'ordinateur, son masque et sa passerelle.</li><li><b>ping</b> + adresse IP : vérifie si un appareil répond sur le réseau.</li></ul>`},
+  {h:"Et IPv6 ?", html:`<p>IPv4 offre environ 4,3 milliards d'adresses : ce n'est plus suffisant. La nouvelle version, <b>IPv6</b>, utilise 128 bits et s'écrit en hexadécimal (ex. : 2001:db8::1).</p>`}
+ ],
+ retenir:[
+  "L'adresse IP identifie de façon unique un appareil sur un réseau.",
+  "IPv4 : 4 nombres de 0 à 255 séparés par des points (32 bits).",
+  "Le masque sépare la partie réseau de la partie machine.",
+  "Même partie réseau = même réseau local = communication directe.",
+  "ipconfig affiche son adresse IP ; ping teste la communication."
+ ],
+ cartes:[
+  {q:"À quoi sert une adresse IP ?", r:"À identifier de façon unique un appareil sur un réseau pour lui envoyer des données."},
+  {q:"Comment est construite une adresse IPv4 ?", r:"4 nombres de 0 à 255 séparés par des points (32 bits au total)."},
+  {q:"192.168.1.300 est-elle une adresse IP valide ?", r:"Non : 300 dépasse 255."},
+  {q:"À quoi sert le masque 255.255.255.0 ?", r:"Il indique que les 3 premiers nombres sont la partie réseau et le dernier la partie machine."},
+  {q:"192.168.1.12 et 192.168.1.40 (masque 255.255.255.0) : même réseau ?", r:"Oui : même partie réseau 192.168.1."},
+  {q:"192.168.1.12 et 192.168.2.12 (masque 255.255.255.0) : même réseau ?", r:"Non : les parties réseau sont différentes (1 ≠ 2)."},
+  {q:"Combien de machines dans le réseau 192.168.1.x ?", r:"254 : les adresses .0 et .255 sont réservées."},
+  {q:"Que se passe-t-il si deux appareils ont la même IP ?", r:"Un conflit d'adresse : la communication ne fonctionne plus correctement."},
+  {q:"Quelle commande affiche son adresse IP sous Windows ?", r:"ipconfig"},
+  {q:"À quoi sert la commande ping ?", r:"À vérifier qu'un appareil répond sur le réseau, à partir de son adresse IP."}
+ ],
+ quiz:[
+  {q:"Laquelle est une adresse IPv4 valide ?", c:["192.168.1.25","192.168.1.256","192.168.1","192.168.a.25"], ok:0, e:"4 nombres, chacun entre 0 et 255."},
+  {q:"Une adresse IPv4 est codée sur…", c:["32 bits (4 octets)","8 bits","16 bits","128 bits"], ok:0, e:"4 nombres × 8 bits = 32 bits. (128 bits, c'est IPv6.)"},
+  {q:"Avec le masque 255.255.255.0, quelle partie de 172.16.5.20 désigne la machine ?", c:["20","172","172.16","5.20"], ok:0, e:"Seul le dernier nombre correspond à la machine."},
+  {q:"Quels appareils sont dans le même réseau (masque 255.255.255.0) ?", c:["10.0.0.5 et 10.0.0.87","10.0.0.5 et 10.0.1.5","10.0.0.5 et 11.0.0.5","10.0.0.5 et 10.1.0.5"], ok:0, e:"Il faut les mêmes 3 premiers nombres : 10.0.0."},
+  {q:"Quelle commande permet de tester si un appareil répond ?", c:["ping","ipconfig","print","copy"], ok:0, e:"ping envoie un petit message et attend la réponse."},
+  {q:"Dans le réseau 192.168.1.x, quelle adresse peut-on donner à un ordinateur ?", c:["192.168.1.254","192.168.1.255","192.168.1.0","192.168.1.300"], ok:0, e:".0 et .255 sont réservées ; 300 est invalide."},
+  {q:"Pourquoi a-t-on créé IPv6 ?", c:["Il n'y avait plus assez d'adresses IPv4","Pour aller plus vite en Wi-Fi","Pour remplacer les câbles","Pour supprimer les routeurs"], ok:0, e:"IPv4 ne permet qu'environ 4,3 milliards d'adresses."}
+ ]
+},
+{
+ id:"sfc1p-b", acc:"#e88ab9", soft:"#fbe5f0", deep:"#b03f78", chap:"Réseaux informatiques", code:"SFC1p", ico:"🧭",
+ titre:"Adresses publiques/privées et routage",
+ resume:"IP publique/privée, DHCP, passerelle, DNS, tables de routage",
+ sections:[
+  {h:"Adresse privée ou publique ?", html:`
+   <div class="def"><b>🏠 Adresse IP privée</b>Utilisée <b>à l'intérieur d'un réseau local</b> (donnée par la box ou le serveur du collège). Elle ne circule pas directement sur Internet : la même adresse privée existe dans des millions de maisons. Plages privées : <b>192.168.x.x</b>, <b>10.x.x.x</b>, <b>172.16.x.x à 172.31.x.x</b>.</div>
+   <div class="def"><b>🌍 Adresse IP publique</b><b>Unique au monde</b>, attribuée par le <b>FAI</b> à la box. Tous les appareils de la maison sortent sur Internet avec cette adresse publique.</div>`},
+  {h:"Comment un appareil reçoit son adresse ?", html:`<ul><li><b>Adresse fixe (statique)</b> : configurée à la main, elle ne change pas. Utile pour un serveur ou une imprimante.</li>
+   <li><b>Adresse automatique (dynamique)</b> : attribuée par un <span class="kw">serveur DHCP</span> quand l'appareil se connecte.</li></ul>`},
+  {h:"La passerelle et le DNS", html:`<ul><li>La <span class="kw">passerelle</span> est l'adresse IP du <b>routeur</b> qui sert de porte de sortie du réseau local. Sans passerelle, on communique dans le réseau local… mais pas avec l'extérieur.</li>
+   <li>Le <span class="kw">DNS</span> est l'annuaire d'Internet : il traduit un <b>nom de domaine</b> (www.education.gouv.fr) en <b>adresse IP</b>.</li></ul>`},
+  {h:"Paquets et tables de routage", html:`<p>Les données sont découpées en <span class="kw">paquets</span>. Chaque paquet contient l'<b>IP source</b> et l'<b>IP destination</b>.</p>
+   <div class="flow"><span>💻 Ton ordinateur</span><em>→</em><span>Box (passerelle)</span><em>→</em><span>Routeur</span><em>→</em><span>Routeur</span><em>→</em><span>🗄️ Serveur du site</span></div>
+   <p>Chaque routeur consulte sa <span class="kw">table de routage</span> : une liste qui indique <b>par où envoyer</b> un paquet selon le réseau de destination — comme les panneaux indicateurs d'un plan de ville.</p>
+   <table class="rt"><tr><th>Réseau de destination</th><th>Passer par</th></tr>
+   <tr><td>192.168.1.0</td><td>Directement (réseau local)</td></tr>
+   <tr><td>10.0.0.0</td><td>Routeur B</td></tr>
+   <tr><td>Tout le reste</td><td>Box → Internet</td></tr></table>
+   <p>Les paquets peuvent prendre des <b>chemins différents</b> ; ils sont remis dans l'ordre à l'arrivée.</p>`}
+ ],
+ retenir:[
+  "Adresse privée = dans le réseau local ; adresse publique = sur Internet, fournie par le FAI.",
+  "Le DHCP attribue automatiquement les adresses IP.",
+  "La passerelle est l'adresse du routeur qui permet de sortir du réseau local.",
+  "Le DNS traduit un nom de domaine en adresse IP.",
+  "Les routeurs utilisent leur table de routage pour acheminer les paquets jusqu'à l'IP de destination."
+ ],
+ cartes:[
+  {q:"Qu'est-ce qu'une adresse IP privée ?", r:"Une adresse utilisée à l'intérieur d'un réseau local. Elle ne circule pas directement sur Internet."},
+  {q:"Qu'est-ce qu'une adresse IP publique ?", r:"Une adresse unique au monde, attribuée par le FAI à la box, utilisée sur Internet."},
+  {q:"Donne un exemple d'adresse privée.", r:"192.168.1.10 (plage 192.168.x.x) — ou 10.x.x.x."},
+  {q:"À quoi sert un serveur DHCP ?", r:"À attribuer automatiquement une adresse IP aux appareils qui se connectent."},
+  {q:"Qu'est-ce qu'une adresse fixe (statique) ?", r:"Une adresse configurée à la main, qui ne change pas (serveur, imprimante…)."},
+  {q:"Qu'est-ce que la passerelle ?", r:"L'adresse IP du routeur qui permet de sortir du réseau local."},
+  {q:"À quoi sert le DNS ?", r:"À traduire un nom de domaine (ex. : www.education.gouv.fr) en adresse IP."},
+  {q:"Qu'est-ce qu'un paquet ?", r:"Un morceau de données qui contient l'IP source et l'IP destination."},
+  {q:"Qu'est-ce qu'une table de routage ?", r:"La liste qu'utilise un routeur pour savoir par où envoyer un paquet selon sa destination."}
+ ],
+ quiz:[
+  {q:"Qui attribue l'adresse IP publique de la box ?", c:["Le FAI","Le commutateur","Le DNS","L'ordinateur"], ok:0, e:"L'adresse publique est fournie par le Fournisseur d'Accès à Internet."},
+  {q:"Laquelle est une adresse IP privée ?", c:["192.168.0.12","8.8.8.8","91.198.174.2","142.250.75.14"], ok:0, e:"Les adresses 192.168.x.x sont réservées aux réseaux locaux."},
+  {q:"Le DNS sert à…", c:["Traduire un nom de domaine en adresse IP","Attribuer les adresses IP","Relier les ordinateurs d'une salle","Couper Internet"], ok:0, e:"Le DNS est l'annuaire d'Internet."},
+  {q:"Le DHCP sert à…", c:["Attribuer automatiquement les adresses IP","Traduire les noms de domaine","Protéger des virus","Imprimer à distance"], ok:0, e:"DHCP = attribution dynamique des adresses."},
+  {q:"Un ordinateur communique avec la salle mais pas avec Internet. Que vérifier en priorité ?", c:["L'adresse de la passerelle","La luminosité de l'écran","Le clavier","La taille du disque dur"], ok:0, e:"Sans passerelle correcte, impossible de sortir du réseau local."},
+  {q:"Qu'utilise un routeur pour choisir le chemin d'un paquet ?", c:["Sa table de routage","Le masque de l'écran","Le nom de l'utilisateur","L'adresse MAC du clavier"], ok:0, e:"La table de routage indique par où envoyer chaque paquet."},
+  {q:"Chaque paquet de données contient…", c:["L'IP source et l'IP destination","Seulement le nom du site","Le mot de passe Wi-Fi","Rien d'autre que les données"], ok:0, e:"C'est grâce à ces adresses que les routeurs l'acheminent."}
+ ]
+},
+{
+ id:"bin", acc:"#6ba3e8", soft:"#e2eefc", deep:"#2c67b3", chap:"Données et binaire", code:"SFC1k · SFC1l · OST1i", ico:"💾",
+ titre:"Le binaire : bit, octet et conversions",
+ resume:"Bit, octet, ko/Mo/Go/To, binaire ↔ décimal, code ASCII",
+ sections:[
+  {h:"Pourquoi le binaire ?", html:`<p>Un ordinateur est fait de circuits électroniques qui n'ont que <b>deux états</b> : le courant passe ou ne passe pas. On les note <b>1</b> et <b>0</b>.</p><p>Toute information (texte, image, son, vidéo) est transformée en une suite de 0 et de 1 : c'est la <span class="kw">numérisation</span>.</p>`},
+  {h:"Le bit et l'octet", html:`<div class="def"><b>🔹 Le bit</b>(de l'anglais <i>binary digit</i>) est la <b>plus petite unité d'information</b> : il vaut 0 ou 1.</div>
+   <div class="def"><b>🔷 L'octet</b>est un groupe de <b>8 bits</b>. Il permet 2⁸ = <b>256 combinaisons</b>, donc de coder les nombres de <b>0 à 255</b>.</div>
+   <p>Avec n bits, on obtient 2ⁿ combinaisons : 1 bit → 2, 2 bits → 4, 3 bits → 8, 4 bits → 16… 8 bits → 256.</p>
+   <p>💡 C'est pour ça que chaque nombre d'une <b>adresse IP</b> va de 0 à 255 : il tient dans un octet !</p>
+   <p>⚠️ Symboles : <b>b</b> = bit, <b>o</b> = octet (en anglais <i>byte</i>, noté B).</p>`},
+  {h:"Les multiples de l'octet", html:`<table class="rt"><tr><th>Unité</th><th>Vaut</th><th>Exemple</th></tr>
+   <tr><td>1 kilooctet (ko)</td><td>1 000 octets</td><td>une page de texte</td></tr>
+   <tr><td>1 mégaoctet (Mo)</td><td>1 000 ko</td><td>une photo, une chanson MP3</td></tr>
+   <tr><td>1 gigaoctet (Go)</td><td>1 000 Mo</td><td>un film</td></tr>
+   <tr><td>1 téraoctet (To)</td><td>1 000 Go</td><td>un disque dur</td></tr></table>
+   <p>On passe d'une unité à la suivante en <b>multipliant par 1 000</b>. (On rencontre aussi 1 024 : 1 Kio = 1 024 octets.)</p>`},
+  {h:"Binaire → décimal", html:`<p>Chaque position d'un octet a un <b>poids</b>. On <b>additionne les poids des bits à 1</b>.</p>
+   <table class="rt" style="text-align:center"><tr><th>128</th><th>64</th><th>32</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
+   <tr><td>0</td><td><b>1</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td><b>1</b></td></tr></table>
+   <p>0100 0001 = 64 + 1 = <b>65</b>. Autre exemple : 1010 = 8 + 2 = <b>10</b>.</p>`},
+  {h:"Décimal → binaire", html:`<p><b>Méthode du tableau</b> : on cherche le plus grand poids qui « rentre » dans le nombre, on met 1, on soustrait, et on recommence.</p>
+   <p>13 = 8 + 4 + 1 → <b>1101</b></p>
+   <p><b>Méthode des divisions par 2</b> : on divise par 2 jusqu'à 0 et on lit les restes <b>de bas en haut</b>.</p>
+   <p>13 ÷ 2 = 6 reste <b>1</b> · 6 ÷ 2 = 3 reste <b>0</b> · 3 ÷ 2 = 1 reste <b>1</b> · 1 ÷ 2 = 0 reste <b>1</b> → <b>1101</b></p>`},
+  {h:"🧪 À toi de jouer", html:`<p style="font-size:.9rem;color:var(--muted)">Touche les bits pour les allumer, ou bouge le curseur.</p><div class="conv" id="conv"></div>`},
+  {h:"Coder autre chose que des nombres", html:`<ul><li><b>Booléen</b> : 1 = vrai, 0 = faux.</li>
+   <li><b>Caractères</b> : chaque lettre, chiffre ou symbole a un numéro dans le <span class="kw">code ASCII étendu</span>, stocké sur un octet. Exemple : <b>A</b> = 65 = 0100 0001 ; <b>B</b> = 66 = 0100 0010 ; <b>a</b> = 97.</li></ul>`}
+ ],
+ retenir:[
+  "Le bit est la plus petite unité d'information : il vaut 0 ou 1.",
+  "Un octet = 8 bits = 256 valeurs (de 0 à 255).",
+  "1 ko = 1 000 octets ; 1 Mo = 1 000 ko ; 1 Go = 1 000 Mo ; 1 To = 1 000 Go.",
+  "Binaire → décimal : on additionne les poids (128, 64, 32, 16, 8, 4, 2, 1) des bits à 1.",
+  "Un texte est codé caractère par caractère (code ASCII), un octet par caractère."
+ ],
+ cartes:[
+  {q:"Qu'est-ce qu'un bit ?", r:"La plus petite unité d'information : il vaut 0 ou 1 (binary digit)."},
+  {q:"Combien de bits dans un octet ?", r:"8 bits."},
+  {q:"Combien de valeurs peut-on coder avec un octet ?", r:"256 valeurs, de 0 à 255."},
+  {q:"Combien de valeurs avec 4 bits ?", r:"2⁴ = 16 valeurs (de 0 à 15)."},
+  {q:"1 Go = combien de Mo ?", r:"1 000 Mo."},
+  {q:"Range du plus petit au plus grand : Go, ko, To, Mo", r:"ko < Mo < Go < To (× 1 000 à chaque fois)."},
+  {q:"Que vaut 1010 en décimal ?", r:"8 + 2 = 10."},
+  {q:"Comment s'écrit 13 en binaire ?", r:"1101 (8 + 4 + 1)."},
+  {q:"Que vaut 1111 1111 en décimal ?", r:"255 : le plus grand nombre sur un octet."},
+  {q:"Quel est le code ASCII de la lettre A ?", r:"65, soit 0100 0001 en binaire."},
+  {q:"Comment code-t-on un booléen ?", r:"1 = vrai, 0 = faux."},
+  {q:"Pourquoi un ordinateur utilise-t-il le binaire ?", r:"Ses circuits n'ont que deux états : courant (1) ou pas de courant (0)."}
+ ],
+ quiz:[
+  {q:"Un bit peut prendre les valeurs…", c:["0 ou 1","0 à 9","0 à 255","A à Z"], ok:0, e:"Le bit est binaire : 0 ou 1."},
+  {q:"Un octet contient…", c:["8 bits","2 bits","10 bits","1 000 bits"], ok:0, e:"1 octet = 8 bits."},
+  {q:"Que vaut 0000 0101 en décimal ?", c:["5","101","3","6"], ok:0, e:"4 + 1 = 5."},
+  {q:"Comment s'écrit 6 en binaire ?", c:["110","101","111","011"], ok:0, e:"6 = 4 + 2 → 110."},
+  {q:"Quel est le plus grand nombre codable sur un octet ?", c:["255","256","128","999"], ok:0, e:"256 valeurs, de 0 à 255."},
+  {q:"Laquelle de ces tailles est la plus grande ?", c:["1 To","900 Go","5 000 Mo","100 000 ko"], ok:0, e:"1 To = 1 000 Go ; 5 000 Mo = 5 Go ; 100 000 ko = 100 Mo."},
+  {q:"1 Go est égal à…", c:["1 000 Mo","100 Mo","1 000 ko","10 Mo"], ok:0, e:"On multiplie par 1 000 d'une unité à la suivante."},
+  {q:"Combien de combinaisons avec 3 bits ?", c:["8","3","6","9"], ok:0, e:"2³ = 8 : de 000 à 111."},
+  {q:"Une photo prise avec un smartphone pèse environ…", c:["quelques Mo","quelques octets","quelques To","quelques bits"], ok:0, e:"Une photo fait en général de 2 à 5 Mo."},
+  {q:"En code ASCII, 0100 0001 (65) correspond à…", c:["la lettre A","la lettre B","la lettre Z","le chiffre 1"], ok:0, e:"A = 65, B = 66…"}
+ ]
+},
+{
+ id:"cyber", acc:"#7dbb5c", soft:"#e6f4dc", deep:"#3f7f23", chap:"Usages du numérique", code:"OST1l · OST1m", ico:"🛡️",
+ titre:"Cybersécurité et cyberviolence",
+ resume:"Données perso, traces, mots de passe, droit d'auteur, cyberviolence, 3018",
+ sections:[
+  {h:"La cybersécurité, c'est quoi ?", html:`<p>La <span class="kw">cybersécurité</span> regroupe les moyens de <b>protéger ses appareils, ses comptes et ses données</b> contre le vol, le piratage et les attaques.</p>`},
+  {h:"Les données personnelles", html:`<p>Ce sont toutes les informations qui permettent d'<b>identifier une personne</b> : nom, adresse, date de naissance, photo, numéro de téléphone, localisation, adresse IP…</p><p>Elles sont protégées par la loi (le <b>RGPD</b>). On évite de les publier ou de les donner à n'importe qui.</p>`},
+  {h:"Les traces numériques", html:`<p>Chaque action en ligne laisse une <span class="kw">trace</span> : historique, publications, « j'aime », photos… Internet n'oublie pas facilement.</p>
+   <ul><li><b>Cookies (témoins de connexion)</b> : petits fichiers qu'un site enregistre dans le navigateur pour mémoriser tes préférences ou suivre ta navigation.</li>
+   <li><b>Géolocalisation</b> : ta position (GPS) peut être enregistrée par les applis et même cachée dans tes photos.</li></ul>
+   <p>✅ Bons réflexes : refuser les cookies inutiles, couper la géolocalisation quand elle ne sert pas, régler la confidentialité de ses comptes.</p>`},
+  {h:"Identification et authentification", html:`<ul><li><span class="kw">Identification</span> : dire <b>qui on est</b> (identifiant, adresse mail).</li>
+   <li><span class="kw">Authentification</span> : <b>prouver</b> que c'est bien nous (mot de passe, code reçu par SMS, empreinte digitale).</li></ul>
+   <p>🔐 Un <b>mot de passe fort</b> : au moins 12 caractères, mélange de majuscules, minuscules, chiffres et symboles ; un mot de passe <b>différent pour chaque compte</b> ; ne jamais le partager. La <b>double authentification</b> ajoute une protection.</p>`},
+  {h:"Les principales menaces", html:`<ul><li><b>Hameçonnage (phishing)</b> : faux message qui imite une banque, un réseau social ou un livreur pour voler tes identifiants.</li>
+   <li><b>Logiciels malveillants</b> (virus, rançongiciels) cachés dans des pièces jointes ou des téléchargements.</li></ul>
+   <p>✅ Vérifier l'expéditeur, ne pas cliquer sur les liens suspects, faire les mises à jour.</p>`},
+  {h:"Respecter la propriété intellectuelle", html:`<p>Images, musiques, vidéos et textes appartiennent à leurs auteurs : c'est le <span class="kw">droit d'auteur</span>. Pour les réutiliser, il faut leur <b>autorisation</b> ou une <b>licence libre</b> (Creative Commons), et toujours <b>citer la source</b>.</p><p>Copier un texte sans le citer = <b>plagiat</b>. Télécharger illégalement = <b>piratage</b>.</p>`},
+  {h:"La cyberviolence", html:`<p>Ce sont des violences commises avec les outils numériques : insultes, menaces, moqueries, rumeurs, exclusion d'un groupe, diffusion de photos ou de vidéos sans accord. Quand elles se <b>répètent</b>, on parle de <span class="kw">cyberharcèlement</span>.</p>
+   <div class="def"><b>🎭 Usurpation d'identité</b>Se faire passer pour quelqu'un (faux compte, utilisation de son compte) pour lui nuire.</div>
+   <div class="def"><b>🖼️ Usage détourné</b>Utiliser la photo ou les informations de quelqu'un sans son accord pour se moquer de lui ou lui nuire (montage, capture d'écran partagée…).</div>
+   <p>⚖️ Ces actes sont <b>punis par la loi</b>. Partager ou « liker » un contenu humiliant, c'est aussi y participer.</p>`},
+  {h:"Victime ou témoin : que faire ?", html:`<ul><li>Ne pas répondre.</li><li><b>Garder des preuves</b> (captures d'écran).</li><li><b>Bloquer et signaler</b> sur la plateforme.</li><li><b>En parler à un adulte de confiance</b> : parents, CPE, professeur.</li><li>Témoin : ne pas partager, soutenir la victime.</li></ul>
+   <p style="font-size:1.05rem">📞 <b>3018</b> : numéro national gratuit, anonyme et confidentiel contre le harcèlement et les violences numériques, 7 j/7 de 9 h à 23 h (téléphone, tchat sur 3018.fr ou appli 3018).</p>`}
+ ],
+ retenir:[
+  "Les données personnelles permettent d'identifier une personne : on les protège.",
+  "Cookies, géolocalisation, publications : nos actions laissent des traces numériques.",
+  "Identification = dire qui on est ; authentification = le prouver (mot de passe fort, double authentification).",
+  "Les œuvres sont protégées par le droit d'auteur : autorisation ou licence libre, et on cite la source.",
+  "Cyberviolence : ne pas répondre, garder les preuves, signaler, en parler à un adulte, appeler le 3018."
+ ],
+ cartes:[
+  {q:"Qu'est-ce que la cybersécurité ?", r:"L'ensemble des moyens pour protéger ses appareils, ses comptes et ses données contre le piratage et le vol."},
+  {q:"Qu'est-ce qu'une donnée personnelle ?", r:"Une information qui permet d'identifier une personne : nom, adresse, photo, téléphone, localisation…"},
+  {q:"Qu'est-ce qu'un cookie (témoin de connexion) ?", r:"Un petit fichier enregistré par un site dans le navigateur pour mémoriser des préférences ou suivre la navigation."},
+  {q:"Qu'est-ce qu'une trace numérique ?", r:"Une information laissée par nos actions en ligne : historique, publications, likes, localisation…"},
+  {q:"Identification ou authentification : « je donne mon identifiant » ?", r:"Identification : je dis qui je suis."},
+  {q:"Identification ou authentification : « je tape mon mot de passe » ?", r:"Authentification : je prouve que c'est bien moi."},
+  {q:"Qu'est-ce qu'un mot de passe fort ?", r:"Au moins 12 caractères mélangeant majuscules, minuscules, chiffres et symboles, différent pour chaque compte."},
+  {q:"Qu'est-ce que l'hameçonnage (phishing) ?", r:"Un faux message qui imite un organisme connu pour voler tes identifiants."},
+  {q:"Peut-on réutiliser librement une image trouvée sur Internet ?", r:"Non : il faut l'autorisation de l'auteur ou une licence libre, et citer la source."},
+  {q:"Qu'est-ce que l'usurpation d'identité ?", r:"Se faire passer pour quelqu'un d'autre (faux compte, utilisation de son compte) pour lui nuire."},
+  {q:"Qu'est-ce qu'un usage détourné ?", r:"Utiliser la photo ou les infos de quelqu'un sans son accord pour se moquer de lui ou lui nuire."},
+  {q:"Quel numéro appeler en cas de cyberharcèlement ?", r:"Le 3018 : gratuit, anonyme et confidentiel, 7 j/7 de 9 h à 23 h."}
+ ],
+ quiz:[
+  {q:"Lequel est le mot de passe le plus sûr ?", c:["Tr0p!Bien-Ma1s-Long","123456","prenom2011","motdepasse"], ok:0, e:"Long, avec majuscules, minuscules, chiffres et symboles."},
+  {q:"Un cookie (témoin de connexion), c'est…", c:["Un petit fichier enregistré par un site dans le navigateur","Un virus","Un mot de passe","Un câble réseau"], ok:0, e:"Il mémorise des préférences ou suit la navigation."},
+  {q:"Taper son mot de passe, c'est…", c:["S'authentifier","S'identifier","Se géolocaliser","Se déconnecter"], ok:0, e:"L'authentification prouve qu'on est bien la personne annoncée."},
+  {q:"Tu reçois un mail « Votre compte va être bloqué, cliquez ici ». C'est sûrement…", c:["De l'hameçonnage (phishing)","Un message du collège","Une mise à jour","Un cookie"], ok:0, e:"Ne clique pas : vérifie l'expéditeur et signale-le."},
+  {q:"Laquelle est une donnée personnelle ?", c:["Ta date de naissance","La capitale de la France","La météo du jour","Le prix d'un timbre"], ok:0, e:"Elle permet, avec d'autres infos, de t'identifier."},
+  {q:"Pour utiliser une musique dans ta vidéo, il faut…", c:["L'autorisation de l'auteur ou une licence libre","Rien, tout est gratuit sur Internet","Juste changer le titre","La télécharger deux fois"], ok:0, e:"La musique est protégée par le droit d'auteur."},
+  {q:"Créer un faux compte au nom d'un camarade pour se moquer de lui, c'est…", c:["De l'usurpation d'identité","Une blague sans conséquence","De la double authentification","Un cookie"], ok:0, e:"C'est une cyberviolence punie par la loi."},
+  {q:"Tu es victime de messages humiliants. Que fais-tu en premier ?", c:["Je garde des preuves et j'en parle à un adulte","Je réponds par des insultes","Je supprime tout sans rien dire","Je partage les messages à tous"], ok:0, e:"Preuves, signalement, adulte de confiance, 3018."},
+  {q:"Le 3018 est…", c:["Le numéro gratuit et anonyme contre le cyberharcèlement","Le numéro des pompiers","Un code Wi-Fi","Une adresse IP"], ok:0, e:"Ouvert 7 j/7 de 9 h à 23 h, aussi par tchat et appli."},
+  {q:"Liker ou partager une vidéo qui humilie quelqu'un…", c:["C'est participer à la cyberviolence","Ce n'est pas grave","Ça protège la victime","C'est obligatoire"], ok:0, e:"Le témoin peut aider en ne partageant pas et en soutenant la victime."}
+ ]
+}
+];
+
+/* ===================== STOCKAGE ===================== */
+const KEY="techno3e-reseaux-v1";
+let P={maitrise:{},best:{}};
+try{const s=localStorage.getItem(KEY); if(s) P=Object.assign(P,JSON.parse(s));}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}}
+
+/* ===================== OUTILS ===================== */
+const $app=document.getElementById("app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const byId=id=>FICHES.find(f=>f.id===id);
+let tab="home";
+const vars=f=>`--acc:${f.acc};--soft:${f.soft};--deep:${f.deep}`;
+const setVars=f=>{$app.style.cssText=f?vars(f):"";};
+const LOGO=`<div class="logo">${["#f4a08a","#f6c56b","#a9d98a","#7fcfc4","#8fb4ee","#6ba3e8","#b59ce8","#ee9ccb","#e88ab9"].map(c=>`<i style="background:${c}"></i>`).join("")}</div>`;
+function setTab(t){tab=t;document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));window.scrollTo(0,0);}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>{setTab(b.dataset.tab); if(b.dataset.tab==="home")home(); if(b.dataset.tab==="flash")flashPick(); if(b.dataset.tab==="quiz")quizPick();});
+
+/* ===================== ACCUEIL ===================== */
+function home(){
+  setTab("home");setVars();
+  const n=FICHES.filter(f=>P.maitrise[f.id]).length;
+  $app.innerHTML=`
+  <header class="top">${LOGO}<h1>TECHNOLOGIE</h1><div class="rainbow"></div><p class="sub">LFO - Gilles Daram - Révisions partie 1 (trimestre 1)</p><p class="sub2">Niveau 3e · Fiches de connaissances</p></header>
+  <div class="card progress-card">
+    <div style="opacity:.85;font-weight:700;font-size:.85rem">Ma progression</div>
+    <div class="big">${n} / ${FICHES.length} fiches maîtrisées</div>
+    <div class="bar"><i style="width:${Math.round(n/FICHES.length*100)}%"></i></div>
+  </div>
+  ${[...new Set(FICHES.map(f=>f.chap))].map(ch=>`<div class="section-title">${ch}</div>`+FICHES.filter(f=>f.chap===ch).map(f=>`
+   <button class="card fiche-item" data-id="${f.id}" style="${vars(f)}">
+     <span class="ico">${f.ico}</span>
+     <span><div><span class="badge">${f.code}</span>${P.maitrise[f.id]?'<span class="badge ok">✓ maîtrisée</span>':''}${P.best[f.id]!=null?`<span class="badge">quiz ${P.best[f.id]}/${f.quiz.length}</span>`:''}</div>
+       <div class="t">${esc(f.titre)}</div><div class="m">${esc(f.resume)}</div></span>
+     <span class="chev">›</span>
+   </button>`).join("")).join("")}
+  <p class="note">Programme de technologie du cycle 4 (BO n°9 du 29 février 2024).<br>Contenus élaborés d'après les fiches de connaissances des académies de Bordeaux et de Versailles.</p>`;
+  $app.querySelectorAll(".fiche-item").forEach(b=>b.onclick=()=>fiche(b.dataset.id));
+}
+
+/* ===================== FICHE ===================== */
+function fiche(id){
+  setTab("home");
+  const f=byId(id);setVars(f);
+  $app.innerHTML=`
+  <button class="back" id="bk">‹ Fiches</button>
+  <div class="fiche">
+    <div class="card"><span class="badge">${f.code}</span><h2>${f.ico} ${esc(f.titre)}</h2></div>
+    ${f.sections.map(s=>`<div class="card"><h3>${s.h}</h3>${s.html}</div>`).join("")}
+    <div class="card retenir"><h3>⭐ Ce que je dois retenir</h3><ul>${f.retenir.map(r=>`<li>${esc(r)}</li>`).join("")}</ul></div>
+  </div>
+  <div class="row"><button class="btn sec" id="gf">🃏 Flashcards</button><button class="btn sec" id="gq">✅ Quiz</button></div>
+  <button class="btn ${P.maitrise[id]?'ghost':'ok'}" id="mk">${P.maitrise[id]?'Retirer « maîtrisée »':'✓ Je maîtrise cette fiche'}</button>`;
+  document.getElementById("bk").onclick=home;
+  document.getElementById("gf").onclick=()=>flashStart([id]);
+  document.getElementById("gq").onclick=()=>quizStart([id]);
+  initConv();
+  document.getElementById("mk").onclick=()=>{P.maitrise[id]=!P.maitrise[id];save();fiche(id);};
+}
+
+
+function initConv(){
+  const el=document.getElementById("conv"); if(!el) return;
+  const W=[128,64,32,16,8,4,2,1]; let v=65;
+  el.innerHTML=`<div class="grid">${W.map(w=>`<div class="w">${w}</div>`).join("")}${W.map((w,k)=>`<button class="bit" data-k="${k}">0</button>`).join("")}</div>
+   <div class="dec" id="cvd"></div><div class="sum" id="cvs"></div><input type="range" min="0" max="255" id="cvr" aria-label="Nombre décimal">`;
+  const bits=el.querySelectorAll(".bit"), r=el.querySelector("#cvr");
+  function draw(){
+    bits.forEach((b,k)=>{const on=(v&W[k])>0;b.textContent=on?1:0;b.classList.toggle("on",on);});
+    const parts=W.filter(w=>v&w);
+    el.querySelector("#cvd").textContent=v+" en décimal";
+    el.querySelector("#cvs").textContent=parts.length?parts.join(" + ")+" = "+v:"aucun bit allumé = 0";
+    r.value=v;
+  }
+  bits.forEach((b,k)=>b.onclick=()=>{v^=W[k];draw();});
+  r.oninput=()=>{v=+r.value;draw();};
+  draw();
+}
+
+/* ===================== FLASHCARDS ===================== */
+function picker(title,sub,onPick){
+  setVars();
+  $app.innerHTML=`
+  <header class="top">${LOGO}<h1>${title}</h1><div class="rainbow"></div><p class="sub2">${sub}</p></header>
+  <button class="card fiche-item rb" data-all="1" style="background:linear-gradient(120deg,#fde7e0,#fdf1d6,#e3f4dc,#dcf3f0,#e2eefc,#ece6fb,#fbe5f0)"><span class="ico">🎲</span><span><div class="t">Tout mélanger</div><div class="m">Les ${FICHES.length} fiches</div></span><span class="chev">›</span></button>
+  <div class="section-title">Par fiche</div>
+  ${FICHES.map(f=>`<button class="card fiche-item" data-id="${f.id}" style="--acc:${f.acc};--soft:${f.soft}"><span class="ico">${f.ico}</span><span><div><span class="badge">${f.code}</span></div><div class="t">${esc(f.titre)}</div></span><span class="chev">›</span></button>`).join("")}`;
+  $app.querySelectorAll(".fiche-item").forEach(b=>b.onclick=()=>onPick(b.dataset.all?FICHES.map(f=>f.id):[b.dataset.id]));
+}
+function flashPick(){setTab("flash");picker("Flashcards","Touche la carte pour voir la réponse",flashStart);}
+function flashStart(ids,deck){
+  setTab("flash");
+  deck=deck||shuffle(ids.flatMap(id=>byId(id).cartes.map(c=>({...c,f:id}))));
+  let i=0; const rater=[]; let sues=0;
+  function show(){
+    if(i>=deck.length) return end();
+    const c=deck[i];setVars(byId(c.f));
+    $app.innerHTML=`
+    <button class="back" id="bk">‹ Flashcards</button>
+    <div class="counter">Carte ${i+1} / ${deck.length} · <span class="badge">${byId(c.f).code}</span></div>
+    <div class="qbar"><i style="width:${i/deck.length*100}%"></i></div>
+    <div class="flash-wrap"><div class="flash" id="fc">
+      <div class="face front"><span class="lab">Question</span><div class="txt">${esc(c.q)}</div><span class="hint">Touche pour retourner</span></div>
+      <div class="face back"><span class="lab">Réponse</span><div class="txt">${esc(c.r)}</div></div>
+    </div></div>
+    <div class="row" id="ans" style="visibility:hidden"><button class="btn sec" id="no" style="background:var(--red-soft);color:var(--red)">À revoir</button><button class="btn ok" id="yes">Je savais ✓</button></div>`;
+    document.getElementById("bk").onclick=flashPick;
+    const fc=document.getElementById("fc");
+    fc.onclick=()=>{fc.classList.toggle("flipped");document.getElementById("ans").style.visibility="visible";};
+    document.getElementById("yes").onclick=()=>{sues++;i++;show();};
+    document.getElementById("no").onclick=()=>{rater.push(c);i++;show();};
+  }
+  function end(){
+    $app.innerHTML=`
+    <div class="card" style="text-align:center">
+      <div style="font-size:2.5rem">${rater.length?'💪':'🎉'}</div>
+      <div class="score">${sues} / ${deck.length}</div>
+      <p>${rater.length?`${rater.length} carte(s) à revoir.`:'Toutes les cartes sont sues, bravo !'}</p>
+    </div>
+    ${rater.length?'<button class="btn" id="again">Revoir les cartes ratées</button>':''}
+    <button class="btn sec" id="restart">Recommencer tout le paquet</button>
+    <button class="btn ghost" id="bk">Choisir un autre paquet</button>`;
+    if(rater.length) document.getElementById("again").onclick=()=>flashStart(null,shuffle(rater));
+    document.getElementById("restart").onclick=()=>flashStart(null,shuffle(deck));
+    document.getElementById("bk").onclick=flashPick;
+  }
+  show();
+}
+
+/* ===================== QUIZ ===================== */
+function quizPick(){setTab("quiz");picker("Quiz","Teste tes connaissances",quizStart);}
+function quizStart(ids){
+  setTab("quiz");
+  const single=ids.length===1?ids[0]:null;
+  let qs=ids.flatMap(id=>byId(id).quiz.map(q=>({...q,f:id})));
+  qs=shuffle(qs); if(!single) qs=qs.slice(0,12);
+  qs=qs.map(q=>({...q,opts:shuffle(q.c.map((t,k)=>({t,good:k===q.ok})))}));
+  let i=0,score=0;
+  function show(){
+    if(i>=qs.length) return end();
+    const q=qs[i];setVars(byId(q.f));
+    $app.innerHTML=`
+    <button class="back" id="bk">‹ Quiz</button>
+    <div class="counter">Question ${i+1} / ${qs.length} · <span class="badge">${byId(q.f).code}</span></div>
+    <div class="qbar"><i style="width:${i/qs.length*100}%"></i></div>
+    <div class="card"><div class="q">${esc(q.q)}</div>
+      ${q.opts.map((o,k)=>`<button class="opt" data-k="${k}">${esc(o.t)}</button>`).join("")}
+      <div id="fb"></div></div>`;
+    document.getElementById("bk").onclick=quizPick;
+    $app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+      const o=q.opts[+b.dataset.k];
+      $app.querySelectorAll(".opt").forEach((x,k)=>{x.disabled=true; if(q.opts[k].good) x.classList.add("good");});
+      if(o.good) score++; else b.classList.add("bad");
+      document.getElementById("fb").innerHTML=`<div class="expl ${o.good?'g':'b'}"><b>${o.good?'Bonne réponse !':'Pas tout à fait.'}</b> ${esc(q.e)}</div>
+        <button class="btn" id="nx">${i+1<qs.length?'Question suivante':'Voir mon score'}</button>`;
+      document.getElementById("nx").onclick=()=>{i++;show();};
+    });
+  }
+  function end(){
+    if(single){P.best[single]=Math.max(P.best[single]??0,score);save();}
+    const pct=score/qs.length;
+    $app.innerHTML=`
+    <div class="card" style="text-align:center">
+      <div style="font-size:2.5rem">${pct>=.8?'🏆':pct>=.5?'👍':'📖'}</div>
+      <div class="score">${score} / ${qs.length}</div>
+      <p>${pct>=.8?'Excellent, tu maîtrises !':pct>=.5?'Pas mal ! Relis la fiche pour consolider.':'Relis la fiche puis réessaie.'}</p>
+    </div>
+    <button class="btn" id="again">Refaire ce quiz</button>
+    ${single?'<button class="btn sec" id="rf">Relire la fiche</button>':''}
+    <button class="btn ghost" id="bk">Choisir un autre quiz</button>`;
+    document.getElementById("again").onclick=()=>quizStart(ids);
+    if(single) document.getElementById("rf").onclick=()=>fiche(single);
+    document.getElementById("bk").onclick=quizPick;
+  }
+  show();
+}
+
+home();
+</script>
+</body>
+</html>
